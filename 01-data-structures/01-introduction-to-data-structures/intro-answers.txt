@@ -1,0 +1,10 @@
+Line
+
+1. It is structured on top of an array and allows a user to add, search for, and remove members from the line. It also allows a user to find the front, back and middle member of the line.
+2. You would use the search functionality and the members name as a parameter.
+3. This could be used for an ordered list where items need to be added in order and removed, like a playlist of songs or people lined up for a ride.
+
+Pixel
+1. It is structured like an array of arrays.
+2. You would call the X array data point and then the Y array data point to find the correct data point.
+3. This could be used for any type of data that requires a matrix with both X and Y coordinates like a game of mine sweep, or a word search
