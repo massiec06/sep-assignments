@@ -8,11 +8,21 @@ class MyQueue
   end
 
   def enqueue(element)
+    @queue.unshift(element)
+    @head = @queue[0]
+    @tail = @queue.last
   end
 
   def dequeue
+    @queue.slice!(@queue.length - 1)
+    @tail = @queue.last
   end
 
   def empty?
+    if @queue.length == 0
+      return true
+    else
+      return false
+    end
   end
 end
