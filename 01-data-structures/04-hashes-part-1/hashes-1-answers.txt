@@ -1,0 +1,5 @@
+Doubling the size of your underlying array would be a bad idea because it wouldn't be effective.
+The addition of one new item to the array would could cause a vary large increase in the array size very
+quickly and it's possible for it to happen again. Two new additions could increase the size of
+the array for no reason. This would cause delays as the array would need to be searched 
+in order for every time the data is accessed and every time the data is re-arranged or re-indexed causing further delay.
