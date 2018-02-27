@@ -48,7 +48,6 @@ class HashClass
       if @items[el]
         newIndex = @items[el].key.sum % arrXfer.length
         arrXfer[newIndex] = @items[el]
-        @items[el] = nil
       end
     end
     # assign the transfer array to our hash array
