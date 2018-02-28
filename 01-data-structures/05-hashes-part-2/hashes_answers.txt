@@ -1,0 +1,33 @@
+The def status method in Separate Chaining printed this when given the six Star Wars movies:
+
+Load factor: 0.5, number of items in hash: 6.0
+Key: Star Wars: The Empire Strikes Back, Value: Number Five
+Key: Star Wars: Attack of the Clones, Value: Number Two
+Key: Star Wars: Return of the Jedi, Value: Number Six
+Key: Star Wars: A New Hope, Value: Number Four
+Key: Star Wars: The Phantom Menace, Value: Number One
+Key: Star Wars: Revenge of the Sith, Value: Number Three
+
+In Open Addressing's `status` method I get this:
+
+Number of items in hash: 6.0
+Key: Star Wars: The Empire Strikes Back, Value: Number Five, Point in Array: 2
+Key: Star Wars: Attack of the Clones, Value: Number Two, Point in Array: 3
+Key: Star Wars: A New Hope, Value: Number Four, Point in Array: 4
+Key: Star Wars: Return of the Jedi, Value: Number Six, Point in Array: 3
+Key: Star Wars: The Phantom Menace, Value: Number One, Point in Array: 6
+Key: Star Wars: Revenge of the Sith, Value: Number Three, Point in Array: 11
+
+There are several different ways to manage collisions in hashes.
+
+1. Random hashing - uses a random number generator that is seeded by the key to help determine the index value,
+  if additional collisions occur, just use the next randomly generated value.
+2. Separate chaining with list head cells - similar to separate chaining with linked lists, but stores the first record
+  of each chain in the slot array itself in order to decrease pointer traversals by 1 for each bucket.
+3. Coalesced hashing - uses a similar technique as separate chaining, but instead of allocating new nodes for the linked
+  list, buckets in the actual table are used. The first empty bucket in the table at the time of a collision is designated
+  as the collision bucket which is linked to the originally targeted chain.
+
+My own would be a modification of the linear probe. Instead of starting the search for an open bucket at the
+intended index, I would have the search start at a randomly chosen index in the hash array with hopes of avoiding
+prime clustering.

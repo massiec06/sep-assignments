@@ -3,76 +3,85 @@ require_relative 'node'
 class OpenAddressing
   def initialize(size)
     @items = Array.new(size)
-    @size = size
+    @item_count = 0.0
   end
 
   def []=(key, value)
-    indy = index(key, @size)
-    hashed_item = @items[indy]
-    if hashed_item.nil?
-      @items[indy] = Node.new(key, value)
-    elsif hashed_item.key != key
-      while @items[index(key, @size)].key != nil && @items[index(key, @size)].key != key
-        resize
-        re_index = index(key, @size)
-        break if @items[re_index] == nil
-      end
-      self[key] = value
-    elsif hashed_item.key == key && hashed_item.value != value
-      if next_open_index(indy) == -1
-        resize
-        re_index = index(key, @size)
-        @items[re_index].value = value
+    ind = self.index(key, size)
+    if @items[ind] == nil
+      @items[ind] = Node.new(key, value)
+      @item_count += 1
+    elsif @items[ind].key == key && @items[ind].value == value
+      return
+    else
+      nextInd = self.next_open_index(ind)
+      if @items[ind].key == key && @items[ind].value != value && nextInd == -1
+        self.resize
+        @items[nextInd].value = value
+        @item_count += 1
+      elsif nextInd == -1
+        self.resize
+        self[key] = value
       else
-        new_index = next_open_index(index(key, @size))
-        @items[new_index] = value
+        @items[nextInd] = Node.new(key, value)
+        @items[nextInd].value = value
+        @item_count += 1
       end
     end
   end
 
   def [](key)
-    item = @items[index(key, @size)]
-    item.nil? ? nil : item.value
+    ind = self.index(key, size)
+    while ind < size
+      if @items[ind].key == key
+        return @items[ind].value
+      else
+        ind += 1
+      end
+    end
   end
 
-  # Returns a unique, deterministically reproducible index into an array
-  # We are hashing based on strings, let's use the ascii value of each string as
-  # a starting point.
+  
   def index(key, size)
     key.sum % size
   end
 
-  # Given an index, find the next open index in @items
+
   def next_open_index(index)
-    initial_index = index
-    while index <= (@size -1)
-      if @items[index] == nil
-        return index
-      elsif @items[index] != nil && index == (initial_index - 1)
-        return -1
-      elsif @items[index] != nil && @items[index] == (@size -1)
-        index = 0
-      else
-        index += 1
-      end
+    while @items[index]
+      index += 1
     end
-    -1
+    if index >= self.size
+      return -1
+    else
+      return index
+    end
   end
 
-  # Simple method to return the number of items in the hash
+
   def size
-    @size
+    @items.length
   end
 
-  # Resize the hash
+
   def resize
-    @size = @size * 2
-    expanded_hash = Array.new(@size)
-    @items.each do |item|
-      if item != nil
-        expanded_hash[index(item.key, @size)] = item
+    old_array = @items
+    @items = Array.new(old_array.length * 2)
+    old_array.each do |i|
+      if i != nil
+        ind = self.index(i.key, @items.length)
+        @items[ind] = Node.new(i.key, i.value)
       end
     end
-    @items = expanded_hash
+  end
+
+  def status
+    puts "Number of items in hash: #{@item_count}"
+    @items.each do |i|
+      if i != nil
+        ind = self.index(i.key, size)
+        puts "Key: #{i.key}, Value: #{i.value}, Point in Array: #{ind}"
+      end
+    end
   end
 end
