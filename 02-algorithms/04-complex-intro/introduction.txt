@@ -23,7 +23,7 @@
 
 9. https://docs.google.com/spreadsheets/d/1tPCOTvg7glItkFklEUGty6Y6x8u6hpmTmFMhvZteNLs/edit?usp=sharing
 
-10. 0(n)
+10. O(log n)
 
 11. 0(1)
 
