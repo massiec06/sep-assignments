@@ -1,57 +1,66 @@
-def bucket_sort(array)
-  if array.length <= 1
-    return array
-  else
-    mid = (array.length/2).floor
-    top = array[(mid + 1)..(array.length)]
-    bottom = array[0..mid]
-    sorted_b = q_sort(bottom)
-    sorted_t = q_sort(top)
-    return q_sort(sorted_b + sorted_t)
+def insertion_sort(collection)
+  sorted_collection = [collection.delete_at(0)]
+
+  for val in collection
+    sorted_collection_index = 0
+
+    while sorted_collection_index < sorted_collection.length
+
+      if val <= sorted_collection[sorted_collection_index]
+        sorted_collection.insert(sorted_collection_index, val)
+        break
+
+      elsif sorted_collection_index == sorted_collection.length - 1
+        sorted_collection.insert(sorted_collection_index + 1, val)
+        break
+      end
+
+      sorted_collection_index += 1
+    end
   end
+  sorted_collection
 end
 
-def bucket_sort_two(array)
-  if array.length <= 1
-    return array
-  else
-    up_to_fifty = []
-    over_fifty = []
-    over_one_hundred = []
-    array.each do |x|
-      if x <= 50
-        up_to_fifty.push(x)
-      elsif x > 50 && x <= 100
-        over_fifty.push(x)
-      else
-        over_one_hundred.push(x)
+
+def bucket_sort(collection, numberOfBuckets)
+  highestNumber = 0
+  for i in collection
+    if i > highestNumber
+      highestNumber = i
+    end
+  end
+  bucketSize = (highestNumber / numberOfBuckets)
+  buckets = []
+  currentBucket = 0
+  while currentBucket < numberOfBuckets
+    buckets << []
+    currentBucket += 1
+  end
+  iteration = 1
+  while iteration <= numberOfBuckets
+    collection.each do |n|
+      if iteration == 1 && n <= (bucketSize * iteration)
+        buckets[(iteration - 1)] << n
+      elsif n <= (bucketSize * iteration) && n > (bucketSize * (iteration - 1))
+        buckets[(iteration - 1)] << n
       end
     end
-    return q_sort(up_to_fifty) + q_sort(over_fifty) +q_sort(over_one_hundred)
+    iteration += 1
   end
-end
-
-def q_sort(array)
-  if array.length <= 1
-    return array
-  else
-    pivot = array.last
-    less = []
-    more =[]
-    array.pop
-    array.each do |x|
-      x <= pivot ? less.push(x) : more.push(x)
+  result = []
+  buckets.each do |j|
+    if j.length == 1
+      result.push(j[0])
+    elsif j.length > 1
+      sorted = insertion_sort(j)
+      sorted.each do |k|
+        result.push(k)
+      end
     end
-    return q_sort(less) + [pivot] + q_sort(more)
   end
+  result
 end
 
-search_array = [0,29,24,32,42,5,6,73,8,12]
-search_array3 = [0,1,2,3,4,5,6,7,8,9]
-search_array2 = [0,11,21,32,42,58,6,7,81,9,10,11,124,131,146,15,16,137,187,19,220,21,30,315,412,77,144]
+array = [12, 33, 7, 20, 44, 10, 13, 25, 27, 11, 6, 48, 14, 17, 38, 45, 34, 32, 18, 49, 50, 21, 22, 46, 23, 8, 24, 26, 4, 29, 30, 31, 36, 5, 37, 16, 39, 1, 41, 43, 3, 15, 19, 35, 47, 9, 40, 28, 2, 42]
 
-sorted_array = bucket_sort(search_array2)
-puts sorted_array
-puts "--------"
-sorted_array = bucket_sort_two(search_array2)
-puts sorted_array
+p bucket_sort(array, 5)
